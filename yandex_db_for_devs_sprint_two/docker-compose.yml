@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: local_cafe_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sprint2_dump.sql:/tmp/sprint2_dump.sql:ro
+      - ./init-custom-restore.sh:/docker-entrypoint-initdb.d/init-custom-restore.sh:ro
+      - ./extra-scripts-new-tables-creation.sql:/tmp/extra-scripts-new-tables-creation.sql:ro
+      - ./extra-scripts-data-insertion-from-raw-tables.sql:/tmp/extra-scripts-data-insertion-from-raw-tables.sql:ro
+      - ./extra-scripts-view-creation.sql:/tmp/extra-scripts-view-creation.sql:ro
+      - ./extra-scripts-analytical-requests.sql:/tmp/extra-scripts-analytical-requests.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d local_cafe_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+
