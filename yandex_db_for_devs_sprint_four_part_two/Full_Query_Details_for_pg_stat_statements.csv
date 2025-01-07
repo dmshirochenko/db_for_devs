@@ -1,0 +1,6 @@
+Query,Calls,Total Time,Avg Time,Max Time,Rows
+SELECT count(*) FROM order_statuses os JOIN orders o ON o.order_id = os.order_id WHERE (SELECT count(*) FROM order_statuses os1 WHERE os1.order_id = o.order_id AND os1.status_id = $1) = $2 AND o.city_id = $3,1,17507.581674,17507.581674,17507.581674,1
+SELECT * FROM user_logs WHERE datetime::date > current_date,1,436.123209,436.123209,436.123209,0
+"SELECT o.order_id, o.order_dt, o.final_cost, s.status_name FROM order_statuses os JOIN orders o ON o.order_id = os.order_id JOIN statuses s ON s.status_id = os.status_id WHERE o.user_id = $1::uuid AND os.status_dt IN (SELECT max(status_dt) FROM order_statuses WHERE order_id = o.order_id)",1,186.214126,186.214126,186.214126,2
+"SELECT event, datetime FROM user_logs WHERE visitor_uuid = $1 ORDER BY 2",1,137.771167,137.771167,137.771167,10
+"SELECT $1, avg(dp.price) FROM dishes_prices dp JOIN dishes d ON d.object_id = dp.dishes_id WHERE dp.date_end IS NULL AND d.fish = $2 UNION SELECT $3, avg(dp.price) FROM dishes_prices dp JOIN dishes d ON d.object_id = dp.dishes_id WHERE dp.date_end IS NULL AND d.meat = $4 UNION SELECT $5, avg(dp.price) FROM dishes_prices dp JOIN dishes d ON d.object_id = dp.dishes_id WHERE dp.date_end IS NULL AND d.spicy = $6 ORDER BY 2",1,128.580167,128.580167,128.580167,3
