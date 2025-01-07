@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: local_delivery_service_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./project_4_part2.sql:/tmp/project_4_part2.sql:ro
+      - ./init-custom-restore.sh:/docker-entrypoint-initdb.d/init-custom-restore.sh:ro
+      - ./user_scripts_pr4.sql:/tmp/user_scripts_pr4.sql:ro
+      - ./extra-scripts-db-optimization.sql:/tmp/extra-scripts-db-optimization.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d local_delivery_service_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+
